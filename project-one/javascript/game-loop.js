@@ -42,8 +42,7 @@ function start() {
   }
 
   // window.requestAnimationFrame(gameLoop);
-
-	theCanvas.addEventListener("mousedown", mouseClickHandler);
+	canvasElement.addEventListener("mousedown", mouseClickHandler);
 
 	function mouseClickHandler(event) {
 		var offSetX = theCanvas.offsetLeft - theCanvas.scrollLeft;

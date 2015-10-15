@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Canvas Animation Engine</title>
+		<style>
+			canvas {
+				background-color: #fff;
+			}
+			body {
+				font-family: "Lucida Sans Unicode", "Lucida Grande", "Trebuchet MS", Helvetica, sans-serif;
+				margin: 40px;
+				color: #edc;
+				background-color: #333;
+			}
+		</style>
+		<script>
+
+		//our main function
+		//it creates a contained scope for all our stuff so it isn't sitting out in the global namespace
+		//way down below, we tell the browser to call 'start' when it has finished its initial loading of the window
+		function start() {
+
+			//we get a reference to the canvas DOM Element/Object by asking the document to get it for us by name
+			//the canvas element is actually created when the browser reads & executes the HTML:
+			//		<canvas id="theCanvas">Upgrade.</canvas>
+			//once that is done, the canvas element is sitting in the DOM with the id "theCanvas"
+			var theCanvas = document.getElementById("theCanvas");
+
+			//ask the canvas object to give us its 2d drawing context2d so we can draw on it!
+			var context2d = theCanvas.getContext("2d");
+
+			//our local variables for the canvas width, height, and other properties
+			var canvasWidth = 500;
+			var canvasHeight = 500;
+			var canvasBackgroundColor = '#fff';
+
+			var drawColor1 = '#42e';
+			var drawColor2 = '#e91';
+
+			var mouse = {
+				x: canvasWidth/2,
+				y: canvasHeight/2
+			};
+
+			//put those w & h values into the *actual* canvas object's width & height
+			theCanvas.width = canvasWidth;
+			theCanvas.height = canvasHeight;
+
+			//we tell the canvas to set its 'mousedown' property to point to our 'mouseClickHandler' function
+			//this makes it so that when the canvas detects a 'mouse down' event, it fires our function and passes
+			//to it an event object that contains information like the coordinates of the click, etc.
+			theCanvas.addEventListener("mousedown", mouseClickHandler);
+
+			function mouseClickHandler(event) {
+				var offSetX = theCanvas.offsetLeft - theCanvas.scrollLeft;
+        		var offsetY = theCanvas.offsetTop - theCanvas.scrollTop;
+				mouse.x = event.pageX - offSetX;
+				mouse.y = event.pageY - offsetY;
+				//you now have the location of the mouse click stored in your mouse variable
+				//here you can call some function that makes use of it...
+        alert("You clicked at (" + mouse.x + ", " + mouse.y + ")");
+			}
+
+			//our animation loop function, called repeatedly
+			function gameLoop() {
+
+				//fill the entire canvas with white
+				clearCanvas();
+
+				//draw a rectangle
+				context2d.fillStyle = drawColor1;
+				context2d.fillRect(
+					60, 40, 	//x & y coords of rect's upper left corner
+					400, 250); 	//width & height of the rect
+
+				//now to have something actually ANIMATED in our ANIMATION ENGINE,
+				//let's draw a random thing...
+				context2d.fillStyle = drawColor2;
+				context2d.fillRect(
+					Math.floor(Math.random()*canvasWidth-20), Math.floor(Math.random()*canvasHeight-20),
+					20, 20);
+
+				//ask the browser nicely to let us draw again when it's ready
+				//sort of: 'when you have time, call this function again'
+				window.requestAnimationFrame(gameLoop);
+
+			}//gameLoop
+
+
+			//simple canvas clearer, draws a rectangle
+			function clearCanvas(){
+				context2d.fillStyle = canvasBackgroundColor;
+				context2d.fillRect(0, 0, theCanvas.width, theCanvas.height);
+			}
+
+			window.requestAnimationFrame(gameLoop);
+
+		}//start
+
+		window.onload = start;
+
+		</script>
+	</head>
+	<body>
+		<h2>Animation Engine Starter</h2>
+		<canvas id="theCanvas">Upgrade.</canvas>
+	</body>
+</html>
